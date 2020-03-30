@@ -28,7 +28,7 @@ class GameModel {
     double price;
     String image;
     String category;
-    String year;
+    DateTime year;
     double rank;
     DateTime createdAt;
     DateTime updatedAt;
@@ -55,7 +55,7 @@ class GameModel {
         price: json["price"].toDouble(),
         image: json["image"],
         category: json["category"],
-        year: json["year"],
+        year: DateTime.parse(json["year"]),
         rank: json["rank"].toDouble(),
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
