@@ -30,28 +30,34 @@ class GameHorizontal extends StatelessWidget {
           initialPage: 1,
           viewportFraction: .35,
         ),
-        children: _tarjetas(),
+        children: _tarjetas(context),
       ),
     );
   }
 
-  List<Widget> _tarjetas() {
+  List<Widget> _tarjetas(BuildContext context) {
     return games.map((game){
       return  Stack(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 10),
-          child: ClipRRect(
+          GestureDetector(
+            onTap: (){
+              Navigator.of(context).pushNamed('game_details', arguments: game);
+            },
+                  
+                 child: Container(
+              margin: EdgeInsets.only(right: 10),
+            child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        child: FadeInImage(
-                  image: NetworkImage(game.image),
-                  placeholder: AssetImage('assets/images/no-image.jpg'),
-                  fit: BoxFit.cover,
-                ),
-                      ),
-          ),
+                          child: Container(
+                            child: FadeInImage(
+                      image: NetworkImage(game.image),
+                      placeholder: AssetImage('assets/images/no-image.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                          ),
+            ),
          ),
+          ),
          Align(
            alignment: Alignment.bottomCenter,
            child: Container(
@@ -83,7 +89,7 @@ class GameHorizontal extends StatelessWidget {
              Align(
             alignment: Alignment.topRight,
             child: Container(
-              height: 35,
+              height: 35, 
               width: 60,
              margin: EdgeInsets.only(right: 10),
               child: Center(child: Text('\$${game.price.toString()}', style: TextStyle(color: lightColor, fontSize: 15, fontWeight: FontWeight.bold ),)),

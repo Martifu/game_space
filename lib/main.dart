@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamespace/pages/favs_page.dart';
+import 'package:gamespace/pages/game_details.dart';
 import 'package:gamespace/pages/home_page.dart';
 import 'package:gamespace/pages/login_page.dart';
 import 'package:gamespace/pages/profile_page.dart';
@@ -15,8 +16,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      
       home: MainPage(),
+      routes: {
+        'game_details' : (_) => GameDetails()
+      },
     );
   }
 }
