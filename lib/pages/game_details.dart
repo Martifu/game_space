@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamespace/models/game_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GameDetails extends StatefulWidget {
   @override
@@ -14,12 +15,14 @@ class _GameDetailsState extends State<GameDetails> {
     final Color secondaryColor = Color(0xff0ebc7d);
     final Color primaryDark = Color(0xff2d304e);
     final Color lightColor = Color(0xffededf1);
+    var favoritos = List<String>(); 
 
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
 
     final GameModel game = ModalRoute.of(context).settings.arguments;
+    
 
     return Scaffold(
       backgroundColor: lightColor,
@@ -56,7 +59,10 @@ class _GameDetailsState extends State<GameDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CircleAvatar(child: IconButton(icon: Icon(LineIcons.arrow_left),color: primaryDark, onPressed: (){Navigator.of(context).pop();}), backgroundColor: lightColor,),
-                CircleAvatar(child: IconButton(icon: Icon(LineIcons.heart_o), color: primaryDark, onPressed: (){}), backgroundColor: lightColor,)
+                CircleAvatar(child: IconButton(icon: Icon(LineIcons.heart_o), color: primaryDark, 
+                onPressed: (){
+                  _favorito(game);
+                }), backgroundColor: lightColor,)
               ],
             ),
           ),
@@ -90,9 +96,9 @@ class _GameDetailsState extends State<GameDetails> {
                               borderRadius: BorderRadiusDirectional.circular(40)
                             ),
                           ),
-                             
+                              
                           SizedBox(height: 10),
-                           Container(child: Center(child: Text('★ ${game.rank.toString()}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.yellow),)),
+                            Container(child: Center(child: Text('★ ${game.rank.toString()}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.yellow),)),
                             padding: EdgeInsets.all(4),
                             width: _size.width/4,
                             decoration: BoxDecoration(
@@ -167,4 +173,17 @@ class _GameDetailsState extends State<GameDetails> {
     ),
     );
   }
+    _favorito(GameModel game) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      
+      
+      favoritos = prefs.getStringList('favoritos');
+      if (!favoritos.contains(game.id)) { 
+        favoritos.add(game.id);
+      }
+      prefs.setStringList('favoritos', favoritos); 
+      print(prefs.get('favoritos').toString()); 
+    }
+
+    
 }

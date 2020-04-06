@@ -80,4 +80,36 @@ class GamesProvider {
       return games.items;
     }
 
+    Future<List<GameModel>> getFavoritos(favoritos) async {
+
+      
+      final url = Uri.https(_url, "/api/games/favoritos");
+      Map<String, dynamic> favo = {
+        "favoritos": favoritos
+      };
+      var body = json.encode(favo);
+      final resp = await http.post(
+        url,
+        headers: {'Content-type': 'application/json'}, 
+        body: body
+      );
+      final decodedData =  json.decode(resp.body);
+      final favs = Games.fromJsonList(decodedData['data']);
+
+      return favs.items;
+    }
+
+    Future<List<GameModel>> getCarrito() async {
+
+      
+      final url = Uri.https(_url, "/api/games/carrito");
+
+      final resp = await http.get(url);
+      final decodedData =  json.decode(resp.body);
+      
+      final cartGames = Games.fromJsonList(decodedData['data']);
+
+      return cartGames.items;
+    }
+
 }
