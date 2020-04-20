@@ -8,6 +8,7 @@ import 'package:gamespace/pages/profile_page.dart';
 import 'package:gamespace/pages/shop_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -16,6 +17,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+
+
 class _HomePageState extends State<HomePage> {
 
   final gamesProvider = new GamesProvider();
@@ -23,7 +26,19 @@ class _HomePageState extends State<HomePage> {
   final Color secondaryColor = Color(0xff0ebc7d);
   final Color primaryDark = Color(0xff2d304e);
   final Color lightColor = Color(0xffededf1);
-    
+
+  @override
+  void initState() { 
+    super.initState();
+    _cargarPrefs();
+  }
+
+    void _cargarPrefs() async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool('logeado', false);
+      preferences.setStringList('carrito', []);
+      preferences.setStringList('favoritos',[]);
+    }
   @override
   Widget build(BuildContext context) {
 
@@ -45,6 +60,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: false,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search, color: primayColor, size: 30,), onPressed: (){
+            Navigator.of(context).pushNamed('search');
             print('Search page');
           },)
         ],
@@ -172,4 +188,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  
 }

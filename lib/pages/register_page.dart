@@ -5,17 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
-
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
-    
     final size = MediaQuery.of(context).size;
     final Color primayColor = Color(0xff5c6cfc);
     final Color secondaryColor = Color(0xff0ebc7d);
@@ -29,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           height: size.height,
           child: Stack(
             children: <Widget>[
-
+              
               Positioned(
                 right: -size.width *0.35,
                 top:  -size.width *0.45, 
@@ -52,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               )
               ),
+              
               SingleChildScrollView(
                 child: SafeArea(
                   child:Container(
@@ -65,14 +63,14 @@ class _LoginPageState extends State<LoginPage> {
                               margin: EdgeInsets.only(top:size.width*.6),
                               child: Row(
                                 children: <Widget>[
-                                  Text('Inicia\nSesión', style: GoogleFonts.russoOne(
+                                  Text('Registrate', style: GoogleFonts.russoOne(
                                     fontSize: 31
                                   ),)
                                 ],
                               ),
                             ),
                             SizedBox(height: 30,),
-                           LoginForm()
+                           RegisterForm()
                           ],
                         )
                       ],
@@ -80,7 +78,22 @@ class _LoginPageState extends State<LoginPage> {
                     ) ,
                   ) 
                   ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white.withOpacity(.2),
+                      child: Icon(LineIcons.close, color: primaryDark,),
+                    ),
+                  )
+                ),
+              ),
             ],
           ),
         )
@@ -88,12 +101,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class LoginForm extends StatefulWidget {
+class RegisterForm extends StatefulWidget {
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _RegisterFormState createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
     final _formKey = GlobalKey<FormState>();
 
   final Color primayColor = Color(0xff5c6cfc);
@@ -104,24 +117,24 @@ class _LoginFormState extends State<LoginForm> {
     final usuarioProvider = UserProvider();
 
     bool validando = false;
-    bool iniciado = false;
 
     String user = '';
+    String email = '';
     String pass = '';
+    String confirmPass = '';
   @override
   Widget build(BuildContext context) {
+
     final size = MediaQuery.of(context).size;
 
     return Stack(
       children: <Widget>[
-        
         Form(
       key: _formKey,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 0),
         child: Column(
           children: <Widget>[
-            
              TextFormField(
               decoration: InputDecoration(
                 border: new OutlineInputBorder(
@@ -133,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
                   width: 1.0,
                 ),
               ),
-              labelText: 'Correo electrónico',
+              labelText: 'Usuario',
               labelStyle:  TextStyle(color: primaryDark, fontSize: 15.0)),
               validator: (value) {
                 if (value.isEmpty) {
@@ -143,6 +156,27 @@ class _LoginFormState extends State<LoginForm> {
               onChanged: (val) => user = val,
             ),
             SizedBox(height:20),
+            TextFormField(
+              decoration: InputDecoration(
+                border: new OutlineInputBorder(
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(8.0),
+                ),
+                borderSide: new BorderSide(
+                  color: Colors.black,
+                  width: 1.0,
+                ),
+              ),
+              labelText: 'Email',
+              labelStyle:  TextStyle(color: primaryDark, fontSize: 15.0)),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Por favor llena este campo';
+                }
+              },
+              onChanged: (val) => email = val,
+            ),
+            SizedBox(height:20), 
             TextFormField(
               obscureText: true,
               decoration: InputDecoration(
@@ -164,10 +198,35 @@ class _LoginFormState extends State<LoginForm> {
               },
               onChanged: (val) => pass = val,
             ),
+            SizedBox(height:20),
+            TextFormField(
+              obscureText: true,
+              decoration: InputDecoration(
+                border: new OutlineInputBorder(
+                borderRadius: const BorderRadius.all(
+                  const Radius.circular(8.0),
+                ),
+                borderSide: new BorderSide(
+                  color: Colors.black,
+                  width: 1.0,
+                ),
+              ),
+              labelText: 'Confirma la contraseña',
+              labelStyle:  TextStyle(color: primaryDark, fontSize: 15.0)),
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Por favor llena este campo';
+                  
+                } else if (value!=pass) {
+                    return 'Las contraseñas no coinciden';
+                  }
+              },
+              onChanged: (val) => confirmPass = val,
+            ),
             AbsorbPointer(
               absorbing: validando,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
                 child: GestureDetector(
                         onTap: (){
                           if (_formKey.currentState.validate()) {
@@ -175,7 +234,7 @@ class _LoginFormState extends State<LoginForm> {
                             setState(() {
                               validando = true;
                             });
-                            _login(user,pass);
+                            _register(user, pass, email);
                             //Navigator.of(context).pushNamed('pago', arguments: compra);
 
                           }
@@ -187,24 +246,13 @@ class _LoginFormState extends State<LoginForm> {
                                ),
                                height: 55,
                                width: double.infinity,
-                           child: Center(child: Text('iniciar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15 ))),
+                           child: Center(child: Text('Registrar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15 ))),
                           ),
                       ),
               ),
             ),
             SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text('¿No tienes cuenta?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: primaryDark),),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).pushNamed('register');
-                  },
-                  child: Text('Crea una aquí',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: primayColor),),
-                )
-              ],
-            )
+            
           ],
         ),
       ),
@@ -232,7 +280,7 @@ class _LoginFormState extends State<LoginForm> {
     
   }
 
-   _showDialog(req) {
+  void _showDialog(req) {
     // flutter defined function
     showDialog(
       context: context,
@@ -240,7 +288,7 @@ class _LoginFormState extends State<LoginForm> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text(req['status']),
-          content: Text(req['message'].toString()),
+          content: Text("Ya existe un usuario creado con este valor: "+req['message'].toString()),
           elevation: 5,
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -256,33 +304,26 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-   _login(String user, String pass) async {
-     
-     
-     final res = await usuarioProvider.login(user, pass);
+  _register(String user, String pass, String email) async {
 
-     if (res['message'] == 'Invalid password') {
-       setState(() {
-       validando = false;
+    
+    final req = await usuarioProvider.nuevoUsuario(user, email, pass);
+
+      if (req['status'] == 'DUPLICATED_VALUES') {
+        setState(() {
+         validando = false;
         });
-       _showDialog(res);
-     } else if (res['message'] == 'user not found') {
-       setState(() {
-       validando = false;
+        _showDialog(req);
+      } else {
+        setState(() {
+        validando = false;
         });
-       _showDialog(res);
-     } else {
-       setState(() {
-       validando = false;
-       iniciado = true;
-        });
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('usuario', res['data']['username']);
-        prefs.setString('email', res['data']['email']);
-        prefs.setBool('logeado',iniciado);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('usuario', user);
+        prefs.setString('email', email);
         Navigator.of(context).pop();
         Navigator.of(context).pushReplacementNamed('home');
-     }
+      }
+    }
 
-   }
 }

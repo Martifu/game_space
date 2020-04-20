@@ -38,13 +38,6 @@ class _FavsPageState extends State<FavsPage> {
   @override
   Widget build(BuildContext context) {
 
-
-
-    final Color primayColor = Color(0xff5c6cfc);
-    final Color secondaryColor = Color(0xff0ebc7d);
-    final Color primaryDark = Color(0xff2d304e);
-    final Color lightColor = Color(0xffededf1);
-
     return Scaffold(
       backgroundColor: lightColor,
       appBar: AppBar(

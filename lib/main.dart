@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gamespace/pages/confirm_order_page.dart';
 import 'package:gamespace/pages/favs_page.dart';
 import 'package:gamespace/pages/game_details.dart';
 import 'package:gamespace/pages/home_page.dart';
 import 'package:gamespace/pages/login_page.dart';
+import 'package:gamespace/pages/pago_page.dart';
 import 'package:gamespace/pages/profile_page.dart';
+import 'package:gamespace/pages/register_page.dart';
+import 'package:gamespace/pages/search_page.dart';
 import 'package:gamespace/pages/shop_page.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -18,7 +22,13 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       home: MainPage(),
       routes: {
-        'game_details' : (_) => GameDetails()
+        'game_details' : (_) => GameDetails(),
+        'confirm_sell' : (_) => ConfirmOrderPage(),
+        'pago' : (_) => CreditCardPage(),
+        'login' : (_) => LoginPage(),
+        'register' : (_) => RegisterPage(),
+        'search'  : (_) => SearchPage(),
+        'home': (_) => MainPage()
       },
     );
   }
@@ -96,7 +106,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   GButton(
                     icon: LineIcons.heart_o,
-                    text: 'Favoritos',
+                    text: 'Fav',
                     
                   ),
                   GButton(

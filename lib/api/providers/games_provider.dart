@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:gamespace/models/cart_model.dart';
 import 'package:gamespace/models/game_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -111,5 +112,67 @@ class GamesProvider {
 
       return cartGames.items;
     }
+
+    Future<List<GameModel>> search(String value) async {
+
+      
+      final url = Uri.https(_url, "/api/games/search/$value");
+
+      final resp = await http.get(url);
+      final decodedData =  json.decode(resp.body);
+      
+      final searchGames = Games.fromJsonList(decodedData['data']);
+      
+      return searchGames.items;
+    }
+
+    Future statusOrder(orderDetails) async {
+
+    
+
+    final resp = await http.post('https://game-space-api.herokuapp.com/api/order/getTotal',
+        headers: {'Content-type': 'application/json'}, 
+      body: orderDetails
+    );
+
+    Map<String, dynamic> decodedResp = json.decode(resp.body);
+
+    print(decodedResp);
+
+    return decodedResp;
+
+  }
+
+  Future payOrder(CartModel compra) async {
+
+    final data = {
+        "customer_name":compra.customerName,
+        "customer_lname":compra.customerLname,
+        "adress":compra.adress,
+        "city":compra.city,
+        "state":compra.state,
+        "country": compra.country,
+        "phone":compra.phone,
+        "mail": compra.mail,
+        "status":compra.status,
+        "user_id":compra.userId,
+        "total":compra.total,
+        "subtotal":compra.subtotal,
+        "unidades":compra.unidades,
+        "orderDetails":compra.orderDetails
+      };
+
+    final resp = await http.post('https://game-space-api.herokuapp.com/api/order/create',
+        headers: {'Content-type': 'application/json'}, 
+      body: json.encode(data)
+    );
+
+    Map<String, dynamic> decodedResp = json.decode(resp.body);
+
+    print(decodedResp);
+
+    return decodedResp;
+
+  }
 
 }

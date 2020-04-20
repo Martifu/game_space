@@ -15,7 +15,31 @@ class _GameDetailsState extends State<GameDetails> {
     final Color secondaryColor = Color(0xff0ebc7d);
     final Color primaryDark = Color(0xff2d304e);
     final Color lightColor = Color(0xffededf1);
-    var favoritos = List<String>(); 
+    List<String> favoritos = List(); 
+    List<String> carrito = List(); 
+
+    void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Agregado"),
+          elevation: 5,
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +52,11 @@ class _GameDetailsState extends State<GameDetails> {
       backgroundColor: lightColor,
       bottomNavigationBar: GestureDetector(
         onTap: (){
-          print('Agregado');
+          _carrito(game);
+          setState(() {
+            
+          });
+          _showDialog();
         },
         child: Container(
           height: _size.height/13,
@@ -62,6 +90,7 @@ class _GameDetailsState extends State<GameDetails> {
                 CircleAvatar(child: IconButton(icon: Icon(LineIcons.heart_o), color: primaryDark, 
                 onPressed: (){
                   _favorito(game);
+                  _showDialog();
                 }), backgroundColor: lightColor,)
               ],
             ),
@@ -173,17 +202,27 @@ class _GameDetailsState extends State<GameDetails> {
     ),
     );
   }
+
     _favorito(GameModel game) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      
-      
-      favoritos = prefs.getStringList('favoritos');
+      List<String> favoritos = (prefs.getStringList('favoritos') ?? List<String>()) ;
       if (!favoritos.contains(game.id)) { 
-        favoritos.add(game.id);
-      }
-      prefs.setStringList('favoritos', favoritos); 
-      print(prefs.get('favoritos').toString()); 
+          favoritos.add(game.id);
+          prefs.setStringList('favoritos', favoritos); 
+          print(prefs.get('favoritos').toString()); 
+        }
     }
 
+    _carrito(GameModel game) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> carrito = (prefs.getStringList('carrito') ?? List<String>()) ;
+      if (!carrito.contains(game.id)) { 
+          carrito.add(game.id);
+          prefs.setStringList('carrito', carrito); 
+          print(prefs.get('carrito').toString()); 
+        }
+     
+     
+    }
     
 }
