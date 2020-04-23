@@ -19,8 +19,8 @@ class CartModel {
     String mail;
     String status;
     String userId;
-    double total;
-    double subtotal;
+    int total;
+    int subtotal;
     int unidades;
     List<OrderDetail> orderDetails;
 
@@ -86,7 +86,7 @@ class OrderDetail {
         this.quantity,
         this.discount,
     });
-
+ 
     factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         gameId: json["game_id"],
         quantity: json["quantity"],

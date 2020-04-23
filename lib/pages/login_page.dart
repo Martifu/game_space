@@ -72,7 +72,19 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             SizedBox(height: 30,),
-                           LoginForm()
+                           LoginForm(),
+                           Padding(
+                             padding:  EdgeInsets.only(top:50.0),
+                             child: Align(
+
+                                alignment: Alignment.bottomRight,
+                                child: FlatButton(onPressed: (){Navigator.of(context).pushNamed('home');},
+                                child: Text('Seguir comprando', style: TextStyle(color: lightColor),),
+                                color: primayColor,
+                                
+                                ),
+                              ),
+                           )
                           ],
                         )
                       ],
@@ -204,7 +216,8 @@ class _LoginFormState extends State<LoginForm> {
                   child: Text('Crea una aquí',style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: primayColor),),
                 )
               ],
-            )
+            ),
+            
           ],
         ),
       ),
@@ -225,7 +238,8 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-        )
+        ),
+        
       ],
     );
     
@@ -279,7 +293,8 @@ class _LoginFormState extends State<LoginForm> {
        SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('usuario', res['data']['username']);
         prefs.setString('email', res['data']['email']);
-        prefs.setBool('logeado',iniciado);
+        prefs.setString('logeado','logeado');
+        print( prefs.getString('usuario'));
         Navigator.of(context).pop();
         Navigator.of(context).pushReplacementNamed('home');
      }

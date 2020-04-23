@@ -22,7 +22,7 @@ class _ShopPageState extends State<ShopPage> {
     final Color lightColor = Color(0xffededf1);
   final gamesProvider = new GamesProvider();
   var carrito = List<String>();
-  bool logeado;
+  String logeado;
   int _itemCount = 1;
   bool confirmar = false;
   Map<String, dynamic> orderDetails ;
@@ -37,7 +37,7 @@ class _ShopPageState extends State<ShopPage> {
 
   _cargarPrefs() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-     logeado = prefs.getBool('logeado');
+     logeado = prefs.getString('usuario');
      carrito = prefs.getStringList('carrito');
      if (carrito.length > 0) {
        confirmar = true;
@@ -49,7 +49,7 @@ class _ShopPageState extends State<ShopPage> {
   
   @override
   Widget build(BuildContext context) {
-
+    print(logeado);
     return Scaffold(
       backgroundColor: lightColor,
       appBar: AppBar(
@@ -171,15 +171,15 @@ class _ShopPageState extends State<ShopPage> {
   _statusOrden() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (!logeado){
-      Navigator.of(context).pushNamed('login');
-    } else {
+    if (logeado!=null){
       carrito = prefs.getStringList('carrito');
      
      orderDetails = await gamesProvider.statusOrder(json.encode({"ids":carrito}));
      print(orderDetails);
 
      Navigator.of(context).pushNamed('confirm_sell', arguments: orderDetails);
+    } else {
+      Navigator.of(context).pushNamed('login');
     }
     
      

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -68,9 +69,9 @@ class CreditCardPage extends StatelessWidget {
                 bottom: 10.0,
                 child: StreamBuilder<String>(
                   stream: cardBloc.nameOutputStream,
-                  initialData: "Your Name",
+                  initialData: "Tu nombre",
                   builder: (context, snapshot) => Text(
-                        snapshot.data.length > 0 ? snapshot.data : "Your Name",
+                        snapshot.data.length > 0 ? snapshot.data : "Tu nombre",
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: UIData.ralewayFont,
@@ -117,7 +118,7 @@ class CreditCardPage extends StatelessWidget {
                           : null;
                       return ProfileTile(
                         textColor: Colors.white,
-                        title: "Expiry",
+                        title: "Expira",
                         subtitle:
                             snapshot.data.length > 0 ? snapshot.data : "MM/YY",
                       );
@@ -153,7 +154,7 @@ class CreditCardPage extends StatelessWidget {
                   fontFamily: UIData.ralewayFont, color: Colors.black),
               onChanged: (out) => cardBloc.ccInputSink.add(ccMask.text),
               decoration: InputDecoration(
-                  labelText: "Credit Card Number",
+                  labelText: "Número de tarjeta",
                   labelStyle: TextStyle(fontWeight: FontWeight.bold),
                   border: OutlineInputBorder()),
             ),
@@ -192,7 +193,7 @@ class CreditCardPage extends StatelessWidget {
                   labelStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
-                  labelText: "Name on card",
+                  labelText: "Nombre en la tarjeta",
                   border: OutlineInputBorder()),
             ),
           ],
@@ -205,7 +206,7 @@ class CreditCardPage extends StatelessWidget {
             color: Color(0xff5c6cfc) ),
         child: FloatingActionButton.extended(
           onPressed: () {
-            _pay(compra);
+            _pay(compra, _context);
           },
           backgroundColor: Colors.transparent,
           icon: Icon(
@@ -250,10 +251,36 @@ class CreditCardPage extends StatelessWidget {
     );
   }
 
-  void _pay(CartModel compra) async {
+  void _pay(CartModel compra, BuildContext context) async {
 
     final payStatus = await gamesProvider.payOrder(compra);
-
-    print(compra.customerLname);
+    
+    if (payStatus['data'] == 'Ok') {
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text('Compra realizada con éxito'),
+          content: Text('Te llegará un correo con las indicaciones y la información de tu compra'),
+          elevation: 5,
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed('home');
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
+    // flutter defined function
+    
+  
+   
   }
 }

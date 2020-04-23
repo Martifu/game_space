@@ -14,7 +14,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String usuario;
   String email;
-  bool logeado = false;
 
   void initState() { 
     super.initState();
@@ -25,12 +24,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
    _cargarPrefs() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-     logeado = prefs.getBool('logeado');
+     //logeado = prefs.getString('logeado');
      usuario = prefs.getString('usuario');
      email = prefs.getString('email');
      setState(() {
        
      });
+      //print(logeado.toString() + usuario +email);
    }
   @override
   Widget build(BuildContext context) {
@@ -40,12 +40,16 @@ class _ProfilePageState extends State<ProfilePage> {
     final Color secondaryColor = Color(0xff0ebc7d);
     final Color primaryDark = Color(0xff2d304e);
     final Color lightColor = Color(0xffededf1);
-
+   print(usuario);
     return Scaffold(
       backgroundColor: lightColor,
-      body: !logeado ? Center(
-          child: RaisedButton(onPressed: (){},
-            child: Text('Inicia Sesión'),
+      body: (usuario == null) ? Center(
+          child: RaisedButton(onPressed: (){
+            Navigator.of(context).pushNamed('login');
+          },
+            child: Text('Inicia Sesión', style: TextStyle(color: lightColor),),
+            color: primayColor,
+            
           ),
         ) : 
         Stack(

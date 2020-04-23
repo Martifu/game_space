@@ -35,9 +35,6 @@ class _HomePageState extends State<HomePage> {
 
     void _cargarPrefs() async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setBool('logeado', false);
-      preferences.setStringList('carrito', []);
-      preferences.setStringList('favoritos',[]);
     }
   @override
   Widget build(BuildContext context) {
